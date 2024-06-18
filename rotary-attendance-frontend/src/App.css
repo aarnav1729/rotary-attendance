@@ -1,57 +1,104 @@
+/* General Styling */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f2f5;
+  color: #333;
+}
+
 .App {
   text-align: center;
   padding: 20px;
 }
 
-form {
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+/* Form Styling */
+.attendance-form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 400px;
-  margin: auto;
-  background-color: #f7f7f7;
+  background-color: #fff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-input, button {
-  margin: 10px 0;
+.date-input-container {
+  margin-bottom: 20px;
+}
+
+.date-label {
+  font-size: 1.2em;
+  margin-right: 10px;
+}
+
+.date-input {
   padding: 10px;
-  width: 100%;
-  max-width: 300px;
+  font-size: 1em;
   border: 1px solid #ddd;
   border-radius: 5px;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
-button {
+.members-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.member {
+  margin: 5px 0;
+  width: 100%;
+}
+
+.member-label {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 400px;
+  transition: background-color 0.3s ease;
+}
+
+.member-checkbox {
+  margin-right: 10px;
+}
+
+.member-label:hover {
+  background-color: #e9ecef;
+}
+
+.submit-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1.2em;
   background-color: #007bff;
-  color: white;
+  color: #fff;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
+.submit-button:hover {
   background-color: #0056b3;
 }
 
-.checkbox-container {
-  display: flex;
-  align-items: center;
-}
-
-.checkbox-container input {
-  margin-left: 10px;
-}
-
-.checkmark {
-  position: relative;
-  top: 1px;
-}
-
+/* Responsive Design */
 @media (max-width: 600px) {
-  input, button {
+  .date-input, .member-label {
     width: 90%;
   }
 }

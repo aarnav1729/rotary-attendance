@@ -7,7 +7,6 @@ function App() {
   const [date, setDate] = useState('');
 
   useEffect(() => {
-    // Fetch the list of members from the backend
     const fetchMembers = async () => {
       try {
         const response = await axios.get('https://rotary-attendance.onrender.com/members');
@@ -48,19 +47,25 @@ function App() {
   return (
     <div className="App">
       <h1>Rotary Club Attendance</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
-        />
+      <form onSubmit={handleSubmit} className="attendance-form">
+        <div className="date-input-container">
+          <label htmlFor="date" className="date-label">Select Date:</label>
+          <input
+            type="date"
+            id="date"
+            className="date-input"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+          />
+        </div>
         <div className="members-list">
           {members.map((member, index) => (
             <div key={member.memberId} className="member">
-              <label>
+              <label className="member-label">
                 <input
                   type="checkbox"
+                  className="member-checkbox"
                   checked={member.present || false}
                   onChange={() => handleCheckboxChange(index)}
                 />
@@ -69,7 +74,7 @@ function App() {
             </div>
           ))}
         </div>
-        <button type="submit">Submit Attendance</button>
+        <button type="submit" className="submit-button">Submit Attendance</button>
       </form>
     </div>
   );
