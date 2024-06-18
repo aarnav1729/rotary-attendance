@@ -101,6 +101,16 @@ const sendMonthlyEmails = async () => {
 // Schedule the sendMonthlyEmails function at the end of each month
 cron.schedule('0 0 1 * *', sendMonthlyEmails);
 
+// Test endpoint for sending emails
+app.get('/test-email', async (req, res) => {
+  try {
+    await sendMonthlyEmails();
+    res.status(200).send('Test emails sent successfully');
+  } catch (error) {
+    res.status(500).send({ error: 'Error sending test emails' });
+  }
+});
+
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
