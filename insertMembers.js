@@ -17,9 +17,7 @@ const attendanceSchema = new mongoose.Schema({
 const Attendance = mongoose.model('Attendance', attendanceSchema);
 
 const members = [
-  { memberId: "1", name: "John Doe", email: "john.doe@example.com" },
-  { memberId: "2", name: "Jane Smith", email: "jane.smith@example.com" },
-  { memberId: "50", name: "Victor Mitchell", email: "victor.mitchell@example.com" }
+  { memberId: "7", name: "Aarnav Singh", email: "aarnavsingh836@gmail.com" },
 ];
 
 const insertMembers = async () => {
