@@ -53,6 +53,16 @@ app.get('/attendance', async (req, res) => {
   res.status(200).send(attendance);
 });
 
+// Fetch all members
+app.get('/members', async (req, res) => {
+  try {
+    const members = await Attendance.find({}, 'memberId name email');
+    res.status(200).send(members);
+  } catch (error) {
+    res.status(500).send({ error: 'Error fetching members' });
+  }
+});
+
 // Email configuration
 const transporter = nodemailer.createTransport({
   service: 'gmail',
