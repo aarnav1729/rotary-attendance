@@ -50,6 +50,7 @@ const sendEmail = (to, subject, text) => {
     text
   };
 
+  console.log(`Attempting to send email to ${to}`);
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log('Error sending email:', error);
