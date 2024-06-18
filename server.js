@@ -4,8 +4,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const nodemailer = require('nodemailer');
+const cron = require('node-cron');
 
 dotenv.config();
+
+console.log('MONGODB_URL:', process.env.MONGODB_URL);
+console.log('EMAIL_USER:', process.env.EMAIL_USER);
+console.log('EMAIL_PASS:', process.env.EMAIL_PASS);
 
 const app = express();
 app.use(cors());
@@ -84,7 +89,6 @@ const sendMonthlyEmails = async () => {
 };
 
 // Schedule the sendMonthlyEmails function at the end of each month
-const cron = require('node-cron');
 cron.schedule('0 0 1 * *', sendMonthlyEmails);
 
 app.listen(3000, () => {
