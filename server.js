@@ -33,36 +33,6 @@ app.get('/', (req, res) => {
   res.send('Rotary Club Attendance Tracker');
 });
 
-// Add a new attendance record
-app.post('/attendance', async (req, res) => {
-  const { memberId, name, email, date, present } = req.body;
-  let attendance = await Attendance.findOne({ memberId });
-
-  if (!attendance) {
-    attendance = new Attendance({ memberId, name, email, events: [] });
-  }
-
-  attendance.events.push({ date, present });
-  await attendance.save();
-  res.status(201).send(attendance);
-});
-
-// Get attendance records
-app.get('/attendance', async (req, res) => {
-  const attendance = await Attendance.find({});
-  res.status(200).send(attendance);
-});
-
-// Fetch all members
-app.get('/members', async (req, res) => {
-  try {
-    const members = await Attendance.find({}, 'memberId name email');
-    res.status(200).send(members);
-  } catch (error) {
-    res.status(500).send({ error: 'Error fetching members' });
-  }
-});
-
 // Email configuration
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -89,6 +59,42 @@ const sendEmail = (to, subject, text) => {
   });
 };
 
+// Add a new attendance record and send an email
+app.post('/attendance', async (req, res) => {
+  const { memberId, name, email, date, present } = req.body;
+  let attendance = await Attendance.findOne({ memberId });
+
+  if (!attendance) {
+    attendance = new Attendance({ memberId, name, email, events: [] });
+  }
+
+  attendance.events.push({ date, present });
+  await attendance.save();
+
+  const emailText = `Hello ${name},\n\nYour attendance has been recorded:\n` +
+    `Date: ${new Date(date).toDateString()}, Present: ${present ? 'Yes' : 'No'}`;
+  sendEmail(email, 'Attendance Confirmation', emailText);
+
+  res.status(201).send(attendance);
+});
+
+// Get attendance records
+app.get('/attendance', async (req, res) => {
+  const attendance = await Attendance.find({});
+  res.status(200).send(attendance);
+});
+
+// Fetch all members
+app.get('/members', async (req, res) => {
+  try {
+    const members = await Attendance.find({}, 'memberId name email');
+    res.status(200).send(members);
+  } catch (error) {
+    res.status(500).send({ error: 'Error fetching members' });
+  }
+});
+
+// Send monthly emails
 const sendMonthlyEmails = async () => {
   const attendanceRecords = await Attendance.find({});
   attendanceRecords.forEach(record => {
