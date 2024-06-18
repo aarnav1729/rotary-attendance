@@ -1,21 +1,25 @@
 /* General Styling */
 body {
   margin: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f2f5;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f7f9fc;
   color: #333;
 }
 
 .App {
   text-align: center;
-  padding: 20px;
 }
 
-h1 {
-  font-size: 3em;
-  margin-bottom: 20px;
-  color: #007bff;
-  text-shadow: 2px 2px #aaa;
+.App-header {
+  background-color: #007bff;
+  padding: 20px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.App-header h1 {
+  margin: 0;
+  font-size: 2.5em;
 }
 
 /* Form Styling */
@@ -25,10 +29,10 @@ h1 {
   align-items: center;
   background-color: #fff;
   padding: 30px;
-  border-radius: 15px;
+  margin: 20px auto;
+  border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   max-width: 600px;
-  margin: 0 auto;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -37,21 +41,20 @@ h1 {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
 }
 
-.date-input-container {
-  margin-bottom: 30px;
+.form-group {
+  margin-bottom: 20px;
   width: 100%;
   text-align: left;
 }
 
 .date-label {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-  display: block;
+  font-size: 1.2em;
+  margin-bottom: 5px;
 }
 
 .date-input {
   padding: 10px;
-  font-size: 1.2em;
+  font-size: 1.1em;
   border: 1px solid #ddd;
   border-radius: 5px;
   width: 100%;
@@ -66,7 +69,7 @@ h1 {
 }
 
 .member {
-  margin: 10px 0;
+  margin: 5px 0;
   width: 100%;
 }
 
@@ -75,7 +78,7 @@ h1 {
   align-items: center;
   background-color: #f9f9f9;
   padding: 15px;
-  border-radius: 10px;
+  border-radius: 5px;
   width: 100%;
   max-width: 500px;
   transition: background-color 0.3s, box-shadow 0.3s;
@@ -84,12 +87,12 @@ h1 {
 
 .member-checkbox {
   margin-right: 15px;
-  transform: scale(1.5);
+  transform: scale(1.2);
   transition: transform 0.3s;
 }
 
 .member-checkbox:checked {
-  transform: scale(1.8);
+  transform: scale(1.4);
 }
 
 .member-label:hover {
@@ -98,13 +101,13 @@ h1 {
 }
 
 .submit-button {
-  margin-top: 30px;
+  margin-top: 20px;
   padding: 15px 30px;
-  font-size: 1.5em;
+  font-size: 1.2em;
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
