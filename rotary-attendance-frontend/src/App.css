@@ -1,25 +1,21 @@
 /* General Styling */
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: #f7f9fc;
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f2f5;
   color: #333;
 }
 
 .App {
   text-align: center;
-}
-
-.App-header {
-  background-color: #007bff;
   padding: 20px;
-  color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.App-header h1 {
-  margin: 0;
-  font-size: 2.5em;
+h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+  color: #007bff;
+  text-shadow: 2px 2px #aaa;
 }
 
 /* Form Styling */
@@ -29,10 +25,10 @@ body {
   align-items: center;
   background-color: #fff;
   padding: 30px;
-  margin: 20px auto;
-  border-radius: 10px;
+  border-radius: 15px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   max-width: 600px;
+  margin: 0 auto;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -41,20 +37,21 @@ body {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
 }
 
-.form-group {
-  margin-bottom: 20px;
+.date-input-container {
+  margin-bottom: 30px;
   width: 100%;
   text-align: left;
 }
 
 .date-label {
-  font-size: 1.2em;
-  margin-bottom: 5px;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  display: block;
 }
 
 .date-input {
   padding: 10px;
-  font-size: 1.1em;
+  font-size: 1.2em;
   border: 1px solid #ddd;
   border-radius: 5px;
   width: 100%;
@@ -69,7 +66,7 @@ body {
 }
 
 .member {
-  margin: 5px 0;
+  margin: 10px 0;
   width: 100%;
 }
 
@@ -78,7 +75,7 @@ body {
   align-items: center;
   background-color: #f9f9f9;
   padding: 15px;
-  border-radius: 5px;
+  border-radius: 10px;
   width: 100%;
   max-width: 500px;
   transition: background-color 0.3s, box-shadow 0.3s;
@@ -87,12 +84,12 @@ body {
 
 .member-checkbox {
   margin-right: 15px;
-  transform: scale(1.2);
+  transform: scale(1.5);
   transition: transform 0.3s;
 }
 
 .member-checkbox:checked {
-  transform: scale(1.4);
+  transform: scale(1.8);
 }
 
 .member-label:hover {
@@ -101,13 +98,13 @@ body {
 }
 
 .submit-button {
-  margin-top: 20px;
+  margin-top: 30px;
   padding: 15px 30px;
-  font-size: 1.2em;
+  font-size: 1.5em;
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
