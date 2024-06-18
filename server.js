@@ -82,9 +82,9 @@ const sendEmail = (to, subject, text) => {
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log(error);
+      console.log('Error sending email:', error);
     } else {
-      console.log('Email sent: ' + info.response);
+      console.log('Email sent:', info.response);
     }
   });
 };
@@ -94,6 +94,7 @@ const sendMonthlyEmails = async () => {
   attendanceRecords.forEach(record => {
     const emailText = `Hello ${record.name},\n\nYour attendance record for this month:\n` +
       record.events.map(event => `Date: ${event.date.toDateString()}, Present: ${event.present}`).join('\n');
+    console.log('Sending email to:', record.email); // Log the email sending
     sendEmail(record.email, 'Monthly Attendance Report', emailText);
   });
 };
@@ -107,6 +108,7 @@ app.get('/test-email', async (req, res) => {
     await sendMonthlyEmails();
     res.status(200).send('Test emails sent successfully');
   } catch (error) {
+    console.log('Error in test-email endpoint:', error);
     res.status(500).send({ error: 'Error sending test emails' });
   }
 });
