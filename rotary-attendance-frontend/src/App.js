@@ -12,7 +12,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/attendance', { memberId, name, email, date, present });
+      await axios.post('https://rotary-attendance.onrender.com/attendance', { memberId, name, email, date, present });
       alert('Attendance marked successfully');
       setMemberId('');
       setName('');
