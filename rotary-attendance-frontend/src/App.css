@@ -1,0 +1,57 @@
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  margin: auto;
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input, button {
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container input {
+  margin-left: 10px;
+}
+
+.checkmark {
+  position: relative;
+  top: 1px;
+}
+
+@media (max-width: 600px) {
+  input, button {
+    width: 90%;
+  }
+}
