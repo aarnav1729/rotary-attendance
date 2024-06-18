@@ -7,9 +7,11 @@ function App() {
   const [date, setDate] = useState('');
 
   useEffect(() => {
+    // Fetch the list of members from the backend
     const fetchMembers = async () => {
       try {
         const response = await axios.get('https://rotary-attendance.onrender.com/members');
+        console.log('Members fetched:', response.data); // Log the response
         setMembers(response.data);
       } catch (error) {
         console.error('Error fetching members:', error);
