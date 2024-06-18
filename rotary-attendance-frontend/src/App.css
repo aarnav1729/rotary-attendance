@@ -12,9 +12,10 @@ body {
 }
 
 h1 {
-  font-size: 2.5em;
+  font-size: 3em;
   margin-bottom: 20px;
   color: #007bff;
+  text-shadow: 2px 2px #aaa;
 }
 
 /* Form Styling */
@@ -23,30 +24,38 @@ h1 {
   flex-direction: column;
   align-items: center;
   background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   max-width: 600px;
   margin: 0 auto;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.attendance-form:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
 }
 
 .date-input-container {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  width: 100%;
+  text-align: left;
 }
 
 .date-label {
-  font-size: 1.2em;
-  margin-right: 10px;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  display: block;
 }
 
 .date-input {
   padding: 10px;
-  font-size: 1em;
+  font-size: 1.2em;
   border: 1px solid #ddd;
   border-radius: 5px;
   width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .members-list {
@@ -57,7 +66,7 @@ h1 {
 }
 
 .member {
-  margin: 5px 0;
+  margin: 10px 0;
   width: 100%;
 }
 
@@ -65,35 +74,45 @@ h1 {
   display: flex;
   align-items: center;
   background-color: #f9f9f9;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 15px;
+  border-radius: 10px;
   width: 100%;
-  max-width: 400px;
-  transition: background-color 0.3s ease;
+  max-width: 500px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .member-checkbox {
-  margin-right: 10px;
+  margin-right: 15px;
+  transform: scale(1.5);
+  transition: transform 0.3s;
+}
+
+.member-checkbox:checked {
+  transform: scale(1.8);
 }
 
 .member-label:hover {
   background-color: #e9ecef;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .submit-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 1.2em;
+  margin-top: 30px;
+  padding: 15px 30px;
+  font-size: 1.5em;
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .submit-button:hover {
   background-color: #0056b3;
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Responsive Design */
