@@ -6,15 +6,20 @@ function App() {
   const [members, setMembers] = useState([]);
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(localStorage.getItem('selectedDate') || '');
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
         const response = await axios.get('https://rotary-attendance.onrender.com/members');
-        console.log('Members fetched:', response.data); // Log the response
-        setMembers(response.data);
-        setFilteredMembers(response.data);
+        const membersWithStatus = response.data.map(member => ({
+          ...member,
+          emailSent: false,
+          present: false
+        }));
+        console.log('Members fetched:', membersWithStatus); // Log the response
+        setMembers(membersWithStatus);
+        setFilteredMembers(membersWithStatus);
       } catch (error) {
         console.error('Error fetching members:', error);
       }
@@ -42,10 +47,15 @@ function App() {
     }
   };
 
-  const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = async (id) => {
     const updatedMembers = members.map(member => {
       if (member.memberId === id) {
-        return { ...member, present: !member.present };
+        const updatedMember = { ...member, present: !member.present };
+        if (updatedMember.present && !updatedMember.emailSent) {
+          sendEmail(updatedMember.email, 'Attendance Confirmation', `Hello ${updatedMember.name},\n\nYour attendance has been recorded:\nDate: ${new Date(date).toDateString()}, Present: Yes`);
+          updatedMember.emailSent = true;
+        }
+        return updatedMember;
       }
       return member;
     });
@@ -72,6 +82,25 @@ function App() {
     }
   };
 
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    setDate(newDate);
+    localStorage.setItem('selectedDate', newDate);
+  };
+
+  const sendEmail = async (to, subject, text) => {
+    try {
+      await axios.post('https://rotary-attendance.onrender.com/send-email', {
+        to,
+        subject,
+        text
+      });
+      console.log(`Email sent to ${to}`);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -86,7 +115,7 @@ function App() {
               id="date"
               className="date-input"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={handleDateChange}
               required
             />
           </div>

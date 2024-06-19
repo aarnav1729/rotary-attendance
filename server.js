@@ -38,7 +38,7 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
-    pass: 'glrd urqj fvtu lrcu' // App-specific password
+    pass: process.env.EMAIL_PASS // App-specific password
   }
 });
 
@@ -50,7 +50,6 @@ const sendEmail = (to, subject, text) => {
     text
   };
 
-  console.log(`Attempting to send email to ${to}`);
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log('Error sending email:', error);
@@ -59,6 +58,12 @@ const sendEmail = (to, subject, text) => {
     }
   });
 };
+
+app.post('/send-email', (req, res) => {
+  const { to, subject, text } = req.body;
+  sendEmail(to, subject, text);
+  res.status(200).send('Email sent');
+});
 
 // Add a new attendance record and send an email
 app.post('/attendance', async (req, res) => {
@@ -71,10 +76,6 @@ app.post('/attendance', async (req, res) => {
 
   attendance.events.push({ date, present });
   await attendance.save();
-
-  const emailText = `Hello ${name},\n\nYour attendance has been recorded:\n` +
-    `Date: ${new Date(date).toDateString()}, Present: ${present ? 'Yes' : 'No'}`;
-  sendEmail(email, 'Attendance Confirmation', emailText);
 
   res.status(201).send(attendance);
 });
