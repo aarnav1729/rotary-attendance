@@ -42,12 +42,12 @@ function App() {
     }
   };
 
-  const handleCheckboxChange = (index) => {
+  const handleCheckboxChange = (filteredIndex, memberId) => {
     const updatedFilteredMembers = [...filteredMembers];
-    updatedFilteredMembers[index].present = !updatedFilteredMembers[index].present;
+    updatedFilteredMembers[filteredIndex].present = !updatedFilteredMembers[filteredIndex].present;
     setFilteredMembers(updatedFilteredMembers);
 
-    const memberIndex = members.findIndex(member => member.memberId === filteredMembers[index].memberId);
+    const memberIndex = members.findIndex(member => member.memberId === memberId);
     if (memberIndex !== -1) {
       const updatedMembers = [...members];
       updatedMembers[memberIndex].present = !updatedMembers[memberIndex].present;
@@ -104,7 +104,7 @@ function App() {
                     type="checkbox"
                     className="member-checkbox"
                     checked={member.present || false}
-                    onChange={() => handleCheckboxChange(index)}
+                    onChange={() => handleCheckboxChange(index, member.memberId)}
                   />
                   {member.name}
                 </label>
