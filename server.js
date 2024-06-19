@@ -29,16 +29,6 @@ const attendanceSchema = new mongoose.Schema({
 
 const Attendance = mongoose.model('Attendance', attendanceSchema);
 
-const eventAttendanceSchema = new mongoose.Schema({
-  memberId: String,
-  name: String,
-  email: String,
-  date: Date,
-  present: Boolean
-});
-
-const EventAttendance = mongoose.model('EventAttendance', eventAttendanceSchema);
-
 app.get('/', (req, res) => {
   res.send('Rotary Club Attendance Tracker');
 });
@@ -48,7 +38,7 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS // App-specific password
+    pass: 'glrd urqj fvtu lrcu'
   }
 });
 
@@ -78,14 +68,13 @@ app.post('/send-email', (req, res) => {
 // Add a new attendance record and send an email
 app.post('/attendance', async (req, res) => {
   const { memberId, name, email, date, present } = req.body;
-  let attendance = await EventAttendance.findOne({ memberId, date });
+  let attendance = await Attendance.findOne({ memberId });
 
   if (!attendance) {
-    attendance = new EventAttendance({ memberId, name, email, date, present });
-  } else {
-    return res.status(400).send({ error: 'Attendance already marked for this date' });
+    attendance = new Attendance({ memberId, name, email, events: [] });
   }
 
+  attendance.events.push({ date, present });
   await attendance.save();
 
   res.status(201).send(attendance);
@@ -93,22 +82,15 @@ app.post('/attendance', async (req, res) => {
 
 // Get attendance records
 app.get('/attendance', async (req, res) => {
-  const { date } = req.query;
-  const attendance = await EventAttendance.find({ date });
+  const attendance = await Attendance.find({});
   res.status(200).send(attendance);
 });
 
-// Fetch all members or members with their attendance status for a specific date
+// Fetch all members
 app.get('/members', async (req, res) => {
-  const { date } = req.query;
   try {
-    if (date) {
-      const membersWithStatus = await EventAttendance.find({ date });
-      res.status(200).send(membersWithStatus);
-    } else {
-      const members = await Attendance.find({}, 'memberId name email');
-      res.status(200).send(members);
-    }
+    const members = await Attendance.find({}, 'memberId name email');
+    res.status(200).send(members);
   } catch (error) {
     res.status(500).send({ error: 'Error fetching members' });
   }
