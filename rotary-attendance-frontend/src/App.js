@@ -6,21 +6,38 @@ function App() {
   const [members, setMembers] = useState([]);
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(localStorage.getItem('date') || '');
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
         const response = await axios.get('https://rotary-attendance.onrender.com/members');
-        console.log('Members fetched:', response.data); 
-        setMembers(response.data);
-        setFilteredMembers(response.data);
+        const fetchedMembers = response.data;
+        const savedCheckboxState = JSON.parse(localStorage.getItem('checkboxState')) || {};
+
+        // Restore the checkbox state for the current date
+        const updatedMembers = fetchedMembers.map(member => ({
+          ...member,
+          present: savedCheckboxState[member.memberId] || false,
+        }));
+
+        setMembers(updatedMembers);
+        setFilteredMembers(updatedMembers);
       } catch (error) {
         console.error('Error fetching members:', error);
       }
     };
     fetchMembers();
   }, []);
+
+  useEffect(() => {
+    // Save checkbox state to localStorage whenever members state changes
+    const checkboxState = members.reduce((acc, member) => {
+      acc[member.memberId] = member.present || false;
+      return acc;
+    }, {});
+    localStorage.setItem('checkboxState', JSON.stringify(checkboxState));
+  }, [members]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,6 +77,21 @@ function App() {
     }
   };
 
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    setDate(newDate);
+    localStorage.setItem('date', newDate);
+
+    // Clear the checkbox state if the date changes
+    const updatedMembers = members.map(member => ({
+      ...member,
+      present: false,
+    }));
+    setMembers(updatedMembers);
+    setFilteredMembers(updatedMembers);
+    localStorage.removeItem('checkboxState');
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -74,7 +106,7 @@ function App() {
               id="date"
               className="date-input"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={handleDateChange}
               required
             />
           </div>
