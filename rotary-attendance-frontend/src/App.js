@@ -12,15 +12,22 @@ function App() {
     const fetchMembers = async () => {
       try {
         const response = await axios.get('https://rotary-attendance.onrender.com/members');
-        console.log('Members fetched:', response.data); // Log the response
         setMembers(response.data);
         setFilteredMembers(response.data);
+        loadCheckboxState(response.data);
       } catch (error) {
         console.error('Error fetching members:', error);
       }
     };
     fetchMembers();
   }, []);
+
+  useEffect(() => {
+    if (date) {
+      localStorage.setItem('attendanceDate', date);
+      loadCheckboxState(members);
+    }
+  }, [date]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +43,8 @@ function App() {
       );
       await Promise.all(promises);
       alert('Attendance marked successfully');
+      localStorage.removeItem('attendanceDate');
+      localStorage.removeItem('checkboxState');
     } catch (error) {
       console.error('Error marking attendance:', error);
       alert('Failed to mark attendance. Please try again.');
@@ -46,6 +55,7 @@ function App() {
     const updatedMembers = [...members];
     updatedMembers[index].present = !updatedMembers[index].present;
     setMembers(updatedMembers);
+    saveCheckboxState(updatedMembers);
   };
 
   const handleSearch = (e) => {
@@ -58,6 +68,32 @@ function App() {
       );
       setFilteredMembers(filtered);
     }
+  };
+
+  const saveCheckboxState = (members) => {
+    const checkboxState = members.reduce((acc, member) => {
+      acc[member.memberId] = member.present || false;
+      return acc;
+    }, {});
+    localStorage.setItem('checkboxState', JSON.stringify(checkboxState));
+  };
+
+  const loadCheckboxState = (members) => {
+    const savedDate = localStorage.getItem('attendanceDate');
+    if (savedDate !== date) {
+      const resetMembers = members.map(member => ({ ...member, present: false }));
+      setMembers(resetMembers);
+      setFilteredMembers(resetMembers);
+      return;
+    }
+
+    const checkboxState = JSON.parse(localStorage.getItem('checkboxState') || '{}');
+    const updatedMembers = members.map(member => ({
+      ...member,
+      present: checkboxState[member.memberId] || false,
+    }));
+    setMembers(updatedMembers);
+    setFilteredMembers(updatedMembers);
   };
 
   return (
