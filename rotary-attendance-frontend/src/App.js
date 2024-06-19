@@ -13,7 +13,7 @@ function App() {
       try {
         const response = await axios.get('https://rotary-attendance.onrender.com/members');
         const fetchedMembers = response.data;
-        const savedCheckboxState = JSON.parse(localStorage.getItem('checkboxState')) || {};
+        const savedCheckboxState = JSON.parse(localStorage.getItem(`checkboxState-${date}`)) || {};
 
         // Restore the checkbox state for the current date
         const updatedMembers = fetchedMembers.map(member => ({
@@ -28,7 +28,7 @@ function App() {
       }
     };
     fetchMembers();
-  }, []);
+  }, [date]);
 
   useEffect(() => {
     // Save checkbox state to localStorage whenever members state changes
@@ -36,8 +36,8 @@ function App() {
       acc[member.memberId] = member.present || false;
       return acc;
     }, {});
-    localStorage.setItem('checkboxState', JSON.stringify(checkboxState));
-  }, [members]);
+    localStorage.setItem(`checkboxState-${date}`, JSON.stringify(checkboxState));
+  }, [members, date]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,15 +81,6 @@ function App() {
     const newDate = e.target.value;
     setDate(newDate);
     localStorage.setItem('date', newDate);
-
-    // Clear the checkbox state if the date changes
-    const updatedMembers = members.map(member => ({
-      ...member,
-      present: false,
-    }));
-    setMembers(updatedMembers);
-    setFilteredMembers(updatedMembers);
-    localStorage.removeItem('checkboxState');
   };
 
   return (
