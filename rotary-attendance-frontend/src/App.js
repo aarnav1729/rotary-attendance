@@ -6,38 +6,21 @@ function App() {
   const [members, setMembers] = useState([]);
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [date, setDate] = useState(localStorage.getItem('date') || '');
+  const [date, setDate] = useState('');
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
         const response = await axios.get('https://rotary-attendance.onrender.com/members');
-        const fetchedMembers = response.data;
-        const savedCheckboxState = JSON.parse(localStorage.getItem(`checkboxState-${date}`)) || {};
-
-        // Restore the checkbox state for the current date
-        const updatedMembers = fetchedMembers.map(member => ({
-          ...member,
-          present: savedCheckboxState[member.memberId] || false,
-        }));
-
-        setMembers(updatedMembers);
-        setFilteredMembers(updatedMembers);
+        console.log('Members fetched:', response.data); // Log the response
+        setMembers(response.data);
+        setFilteredMembers(response.data);
       } catch (error) {
         console.error('Error fetching members:', error);
       }
     };
     fetchMembers();
-  }, [date]);
-
-  useEffect(() => {
-    // Save checkbox state to localStorage whenever members state changes
-    const checkboxState = members.reduce((acc, member) => {
-      acc[member.memberId] = member.present || false;
-      return acc;
-    }, {});
-    localStorage.setItem(`checkboxState-${date}`, JSON.stringify(checkboxState));
-  }, [members, date]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,12 +60,6 @@ function App() {
     }
   };
 
-  const handleDateChange = (e) => {
-    const newDate = e.target.value;
-    setDate(newDate);
-    localStorage.setItem('date', newDate);
-  };
-
   return (
     <div className="App">
       <header className="App-header">
@@ -97,7 +74,7 @@ function App() {
               id="date"
               className="date-input"
               value={date}
-              onChange={handleDateChange}
+              onChange={(e) => setDate(e.target.value)}
               required
             />
           </div>
