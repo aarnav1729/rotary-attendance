@@ -8,10 +8,6 @@ const cron = require('node-cron');
 
 dotenv.config();
 
-console.log('MONGODB_URL:', process.env.MONGODB_URL);
-console.log('EMAIL_USER:', process.env.EMAIL_USER);
-console.log('EMAIL_PASS:', process.env.EMAIL_PASS);
-
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -24,7 +20,7 @@ const attendanceSchema = new mongoose.Schema({
   memberId: String,
   name: String,
   email: String,
-  events: [{ date: Date, present: Boolean }]
+  events: [{ date: Date, present: Boolean, absent: Boolean }]
 });
 
 const Attendance = mongoose.model('Attendance', attendanceSchema);
@@ -33,7 +29,6 @@ app.get('/', (req, res) => {
   res.send('Rotary Club Attendance Tracker');
 });
 
-// Email configuration
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -65,28 +60,25 @@ app.post('/send-email', (req, res) => {
   res.status(200).send('Email sent');
 });
 
-// Add a new attendance record and send an email
 app.post('/attendance', async (req, res) => {
-  const { memberId, name, email, date, present } = req.body;
+  const { memberId, name, email, date, present, absent } = req.body;
   let attendance = await Attendance.findOne({ memberId });
 
   if (!attendance) {
     attendance = new Attendance({ memberId, name, email, events: [] });
   }
 
-  attendance.events.push({ date, present });
+  attendance.events.push({ date, present, absent });
   await attendance.save();
 
   res.status(201).send(attendance);
 });
 
-// Get attendance records
 app.get('/attendance', async (req, res) => {
   const attendance = await Attendance.find({});
   res.status(200).send(attendance);
 });
 
-// Fetch all members
 app.get('/members', async (req, res) => {
   try {
     const members = await Attendance.find({}, 'memberId name email');
@@ -96,21 +88,18 @@ app.get('/members', async (req, res) => {
   }
 });
 
-// Send monthly emails
 const sendMonthlyEmails = async () => {
   const attendanceRecords = await Attendance.find({});
   attendanceRecords.forEach(record => {
     const emailText = `Hello ${record.name},\n\nYour attendance record for this month:\n` +
-      record.events.map(event => `Date: ${event.date.toDateString()}, Present: ${event.present}`).join('\n');
-    console.log('Sending email to:', record.email); // Log the email sending
+      record.events.map(event => `Date: ${event.date.toDateString()}, Present: ${event.present ? 'Yes' : 'No'}, Absent: ${event.absent ? 'Yes' : 'No'}`).join('\n');
+    console.log('Sending email to:', record.email);
     sendEmail(record.email, 'Monthly Attendance Report', emailText);
   });
 };
 
-// Schedule the sendMonthlyEmails function at the end of each month
 cron.schedule('0 0 1 * *', sendMonthlyEmails);
 
-// Test endpoint for sending emails
 app.get('/test-email', async (req, res) => {
   try {
     await sendMonthlyEmails();

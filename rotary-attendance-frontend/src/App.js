@@ -14,10 +14,9 @@ function App() {
         const response = await axios.get('https://rotary-attendance.onrender.com/members');
         const membersWithStatus = response.data.map(member => ({
           ...member,
-          emailSent: false,
-          present: false
+          present: false,
+          absent: false
         }));
-        console.log('Members fetched:', membersWithStatus); // Log the response
         setMembers(membersWithStatus);
         setFilteredMembers(membersWithStatus);
       } catch (error) {
@@ -37,6 +36,7 @@ function App() {
           email: member.email,
           date,
           present: member.present || false,
+          absent: member.absent || false,
         })
       );
       await Promise.all(promises);
@@ -47,27 +47,26 @@ function App() {
     }
   };
 
-  const handleCheckboxChange = async (id) => {
+  const handlePresentClick = (id) => {
     const updatedMembers = members.map(member => {
       if (member.memberId === id) {
-        const updatedMember = { ...member, present: !member.present };
-        if (updatedMember.present && !updatedMember.emailSent) {
-          sendEmail(updatedMember.email, 'Attendance Confirmation', `Hello ${updatedMember.name},\n\nYour attendance has been recorded:\nDate: ${new Date(date).toDateString()}, Present: Yes`);
-          updatedMember.emailSent = true;
-        }
-        return updatedMember;
+        return { ...member, present: !member.present, absent: member.present ? false : member.absent };
       }
       return member;
     });
     setMembers(updatedMembers);
+    setFilteredMembers(updatedMembers);
+  };
 
-    const updatedFilteredMembers = filteredMembers.map(member => {
+  const handleAbsentClick = (id) => {
+    const updatedMembers = members.map(member => {
       if (member.memberId === id) {
-        return { ...member, present: !member.present };
+        return { ...member, absent: !member.absent, present: member.absent ? false : member.present };
       }
       return member;
     });
-    setFilteredMembers(updatedFilteredMembers);
+    setMembers(updatedMembers);
+    setFilteredMembers(updatedMembers);
   };
 
   const handleSearch = (e) => {
@@ -86,19 +85,6 @@ function App() {
     const newDate = e.target.value;
     setDate(newDate);
     localStorage.setItem('selectedDate', newDate);
-  };
-
-  const sendEmail = async (to, subject, text) => {
-    try {
-      await axios.post('https://rotary-attendance.onrender.com/send-email', {
-        to,
-        subject,
-        text
-      });
-      console.log(`Email sent to ${to}`);
-    } catch (error) {
-      console.error('Error sending email:', error);
-    }
   };
 
   return (
@@ -134,13 +120,21 @@ function App() {
             {filteredMembers.map(member => (
               <div key={member.memberId} className="member">
                 <label className="member-label">
-                  <input
-                    type="checkbox"
-                    className="member-checkbox"
-                    checked={member.present || false}
-                    onChange={() => handleCheckboxChange(member.memberId)}
-                  />
                   {member.name}
+                  <button
+                    type="button"
+                    className={`attendance-button ${member.present ? 'present' : ''}`}
+                    onClick={() => handlePresentClick(member.memberId)}
+                  >
+                    Present
+                  </button>
+                  <button
+                    type="button"
+                    className={`attendance-button ${member.absent ? 'absent' : ''}`}
+                    onClick={() => handleAbsentClick(member.memberId)}
+                  >
+                    Absent
+                  </button>
                 </label>
               </div>
             ))}

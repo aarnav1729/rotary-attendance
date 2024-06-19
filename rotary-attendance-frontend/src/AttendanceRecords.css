@@ -1,0 +1,66 @@
+/* General Styling */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f7f9fc;
+    color: #333;
+  }
+  
+  .AttendanceRecords {
+    text-align: center;
+  }
+  
+  .AttendanceRecords-header {
+    background-color: #007bff;
+    padding: 20px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .AttendanceRecords-header h1 {
+    margin: 0;
+    font-size: 2.5em;
+  }
+  
+  /* Form Styling */
+  .form-group {
+    margin: 20px auto;
+    width: 300px;
+    text-align: left;
+  }
+  
+  .date-label {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+  }
+  
+  .date-input {
+    padding: 10px;
+    font-size: 1.1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .records-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .record {
+    margin: 20px 0;
+    width: 90%;
+    max-width: 600px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .event {
+    margin-top: 10px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+  }  
