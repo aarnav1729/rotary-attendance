@@ -42,17 +42,22 @@ function App() {
     }
   };
 
-  const handleCheckboxChange = (filteredIndex, memberId) => {
-    const updatedFilteredMembers = [...filteredMembers];
-    updatedFilteredMembers[filteredIndex].present = !updatedFilteredMembers[filteredIndex].present;
-    setFilteredMembers(updatedFilteredMembers);
+  const handleCheckboxChange = (id) => {
+    const updatedMembers = members.map(member => {
+      if (member.memberId === id) {
+        return { ...member, present: !member.present };
+      }
+      return member;
+    });
+    setMembers(updatedMembers);
 
-    const memberIndex = members.findIndex(member => member.memberId === memberId);
-    if (memberIndex !== -1) {
-      const updatedMembers = [...members];
-      updatedMembers[memberIndex].present = !updatedMembers[memberIndex].present;
-      setMembers(updatedMembers);
-    }
+    const updatedFilteredMembers = filteredMembers.map(member => {
+      if (member.memberId === id) {
+        return { ...member, present: !member.present };
+      }
+      return member;
+    });
+    setFilteredMembers(updatedFilteredMembers);
   };
 
   const handleSearch = (e) => {
@@ -97,14 +102,14 @@ function App() {
             />
           </div>
           <div className="members-list">
-            {filteredMembers.map((member, index) => (
+            {filteredMembers.map(member => (
               <div key={member.memberId} className="member">
                 <label className="member-label">
                   <input
                     type="checkbox"
                     className="member-checkbox"
                     checked={member.present || false}
-                    onChange={() => handleCheckboxChange(index, member.memberId)}
+                    onChange={() => handleCheckboxChange(member.memberId)}
                   />
                   {member.name}
                 </label>
