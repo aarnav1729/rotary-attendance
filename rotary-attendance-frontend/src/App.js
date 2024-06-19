@@ -43,9 +43,16 @@ function App() {
   };
 
   const handleCheckboxChange = (index) => {
-    const updatedMembers = [...members];
-    updatedMembers[index].present = !updatedMembers[index].present;
-    setMembers(updatedMembers);
+    const updatedFilteredMembers = [...filteredMembers];
+    updatedFilteredMembers[index].present = !updatedFilteredMembers[index].present;
+    setFilteredMembers(updatedFilteredMembers);
+
+    const memberIndex = members.findIndex(member => member.memberId === filteredMembers[index].memberId);
+    if (memberIndex !== -1) {
+      const updatedMembers = [...members];
+      updatedMembers[memberIndex].present = !updatedMembers[memberIndex].present;
+      setMembers(updatedMembers);
+    }
   };
 
   const handleSearch = (e) => {
