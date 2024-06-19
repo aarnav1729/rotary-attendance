@@ -9,23 +9,32 @@ function App() {
   const [date, setDate] = useState(localStorage.getItem('selectedDate') || '');
 
   useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const response = await axios.get('https://rotary-attendance.onrender.com/members');
-        const membersWithStatus = response.data.map(member => ({
-          ...member,
-          emailSent: false,
-          present: false
-        }));
-        console.log('Members fetched:', membersWithStatus); // Log the response
-        setMembers(membersWithStatus);
-        setFilteredMembers(membersWithStatus);
-      } catch (error) {
-        console.error('Error fetching members:', error);
-      }
-    };
-    fetchMembers();
-  }, []);
+    if (date) {
+      fetchMembers(date);
+    }
+  }, [date]);
+
+  const fetchMembers = async (eventDate) => {
+    try {
+      const response = await axios.get('https://rotary-attendance.onrender.com/members', {
+        params: { date: eventDate }
+      });
+      const membersWithStatus = response.data.map(member => ({
+        ...member,
+        emailSent: member.emailSent || false,
+        present: member.present || false
+      }));
+      console.log('Members fetched:', membersWithStatus); // Log the response
+      setMembers(membersWithStatus);
+      setFilteredMembers(membersWithStatus);
+    } catch (error) {
+      console.error('Error fetching members:', error);
+    }
+  };
+
+  useEffect(() => {
+    localStorage.setItem('members', JSON.stringify(members));
+  }, [members]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,14 +69,7 @@ function App() {
       return member;
     });
     setMembers(updatedMembers);
-
-    const updatedFilteredMembers = filteredMembers.map(member => {
-      if (member.memberId === id) {
-        return { ...member, present: !member.present };
-      }
-      return member;
-    });
-    setFilteredMembers(updatedFilteredMembers);
+    setFilteredMembers(updatedMembers.filter(member => member.name.toLowerCase().includes(searchTerm.toLowerCase())));
   };
 
   const handleSearch = (e) => {
@@ -86,6 +88,7 @@ function App() {
     const newDate = e.target.value;
     setDate(newDate);
     localStorage.setItem('selectedDate', newDate);
+    fetchMembers(newDate);
   };
 
   const sendEmail = async (to, subject, text) => {
