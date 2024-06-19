@@ -12,24 +12,20 @@ function App() {
     const fetchMembers = async () => {
       try {
         const response = await axios.get('https://rotary-attendance.onrender.com/members');
-        const savedMembers = JSON.parse(localStorage.getItem('members')) || response.data.map(member => ({
+        const membersWithStatus = response.data.map(member => ({
           ...member,
           emailSent: false,
           present: false
         }));
-        console.log('Members fetched:', savedMembers); // Log the response
-        setMembers(savedMembers);
-        setFilteredMembers(savedMembers);
+        console.log('Members fetched:', membersWithStatus); // Log the response
+        setMembers(membersWithStatus);
+        setFilteredMembers(membersWithStatus);
       } catch (error) {
         console.error('Error fetching members:', error);
       }
     };
     fetchMembers();
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem('members', JSON.stringify(members));
-  }, [members]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,7 +60,14 @@ function App() {
       return member;
     });
     setMembers(updatedMembers);
-    setFilteredMembers(updatedMembers.filter(member => member.name.toLowerCase().includes(searchTerm.toLowerCase())));
+
+    const updatedFilteredMembers = filteredMembers.map(member => {
+      if (member.memberId === id) {
+        return { ...member, present: !member.present };
+      }
+      return member;
+    });
+    setFilteredMembers(updatedFilteredMembers);
   };
 
   const handleSearch = (e) => {
