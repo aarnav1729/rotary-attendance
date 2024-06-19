@@ -4,6 +4,8 @@ import './App.css';
 
 function App() {
   const [members, setMembers] = useState([]);
+  const [filteredMembers, setFilteredMembers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [date, setDate] = useState('');
 
   useEffect(() => {
@@ -12,6 +14,7 @@ function App() {
         const response = await axios.get('https://rotary-attendance.onrender.com/members');
         console.log('Members fetched:', response.data); // Log the response
         setMembers(response.data);
+        setFilteredMembers(response.data);
       } catch (error) {
         console.error('Error fetching members:', error);
       }
@@ -45,6 +48,18 @@ function App() {
     setMembers(updatedMembers);
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    if (e.target.value === '') {
+      setFilteredMembers(members);
+    } else {
+      const filtered = members.filter(member =>
+        member.name.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+      setFilteredMembers(filtered);
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -63,8 +78,19 @@ function App() {
               required
             />
           </div>
+          <div className="form-group">
+            <label htmlFor="search" className="search-label">Search Members:</label>
+            <input
+              type="text"
+              id="search"
+              className="search-input"
+              value={searchTerm}
+              onChange={handleSearch}
+              placeholder="Search by name..."
+            />
+          </div>
           <div className="members-list">
-            {members.map((member, index) => (
+            {filteredMembers.map((member, index) => (
               <div key={member.memberId} className="member">
                 <label className="member-label">
                   <input
